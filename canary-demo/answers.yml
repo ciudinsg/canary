@@ -1,53 +1,140 @@
 # Deployment Information
 pods_status:
-  main_pods_running: #TODO: Enter number of main pods running
-  canary_pods_running: #TODO: Enter number of canary pods running
+  main_pods_running: 3 #TODO: Enter number of main pods running
+  canary_pods_running: 1 #TODO: Enter number of canary pods running
+
+#$ kubectl get pods -A | grep canary-demo-canary | wc
+#      1       6     111
+#$ kubectl get pods -A | grep canary-demo- | wc
+#      4      24     444
 
 # Service Information
 service_endpoints:
-  main_service_cluster_ip: #TODO: Enter the ClusterIP of main service
-  canary_service_cluster_ip: #TODO: Enter the ClusterIP of canary service
+  main_service_cluster_ip: 10.100.134.136 #TODO: Enter the ClusterIP of main service
+  canary_service_cluster_ip: 10.96.244.159 #TODO: Enter the ClusterIP of canary service
+
+#$ kubectl get svc -n canary-demo
+#NAME                                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+#alertmanager-operated                     ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP   19m
+#canary-demo                               ClusterIP   10.100.134.136   <none>        80/TCP                       19m
+#canary-demo-canary                        ClusterIP   10.96.244.159    <none>        80/TCP                       19m
+#prometheus-grafana                        ClusterIP   10.107.117.87    <none>        80/TCP                       20m
+#prometheus-kube-prometheus-alertmanager   ClusterIP   10.109.54.190    <none>        9093/TCP,8080/TCP            20m
+#prometheus-kube-prometheus-operator       ClusterIP   10.100.62.192    <none>        443/TCP                      20m
+#prometheus-kube-prometheus-prometheus     ClusterIP   10.106.249.209   <none>        9090/TCP,8080/TCP            20m
+#prometheus-kube-state-metrics             ClusterIP   10.107.130.175   <none>        8080/TCP                     20m
+#prometheus-operated                       ClusterIP   None             <none>        9090/TCP                     19m
+#prometheus-prometheus-node-exporter       ClusterIP   10.111.131.89    <none>        9100/TCP                     20m
 
 # Ingress Information
 ingress_details:
-  address: #TODO: Enter the Ingress controller IP address
-  host: #TODO: Enter the configured host (should be canary-demo.local)
+  address: 192.168.49.2 #TODO: Enter the Ingress controller IP address
+  host: canary-demo.local #TODO: Enter the configured host (should be canary-demo.local)
+
+#$ kubectl get ingress -n canary-demo
+#NAME                       CLASS   HOSTS               ADDRESS        PORTS   AGE
+#canary-demo-ingress        nginx   canary-demo.local   192.168.49.2   80      20m
+#canary-demo-main-ingress   nginx   canary-demo.local   192.168.49.2   80      20m
 
 # Metrics
 main_deployment_metrics:
-  http_requests_total: #TODO: Enter the value from main deployment's /metrics endpoint
-  process_cpu_seconds_total: #TODO: Enter the CPU seconds from main deployment
-  process_resident_memory_bytes: #TODO: Enter the memory usage from main deployment
+  http_requests_total: 1 #TODO: Enter the value from main deployment's /metrics endpoint
+  process_cpu_seconds_total: 0.42000000000000004 #TODO: Enter the CPU seconds from main deployment
+  process_resident_memory_bytes: 3.262464e+07 #TODO: Enter the memory usage from main deployment
+
+#$ curl -H "Host: canary-demo.local" localhost:8080/metrics | grep http_requests_total
+#http_requests_total{version="v1"} 1.0
+#$ curl -H "Host: canary-demo.local" localhost:8080/metrics | grep process_cpu_seconds_total
+#process_cpu_seconds_total 0.42000000000000004
+#curl -H "Host: canary-demo.local" localhost:8080/metrics | grep process_resident_memory_bytes
+#process_resident_memory_bytes 3.262464e+07
 
 canary_deployment_metrics:
-  http_requests_total: #TODO: Enter the value from canary deployment's /metrics endpoint
-  process_cpu_seconds_total: #TODO: Enter the CPU seconds from canary deployment
-  process_resident_memory_bytes: #TODO: Enter the memory usage from canary deployment
+  http_requests_total: 7 #TODO: Enter the value from canary deployment's /metrics endpoint
+  process_cpu_seconds_total: 0.48000000000000004 #TODO: Enter the CPU seconds from canary deployment
+  process_resident_memory_bytes: 3.2813056e+07 #TODO: Enter the memory usage from canary deployment
+
+#$ curl -H "Host: canary-demo.local" localhost:8081/metrics | grep http_requests_total
+#http_requests_total{version="v2"} 7.0
+#curl -H "Host: canary-demo.local" localhost:8081/metrics | grep process_cpu_seconds_total
+#process_cpu_seconds_total 0.48000000000000004
+#curl -H "Host: canary-demo.local" localhost:8081/metrics | grep process_resident_memory_bytes
+#process_resident_memory_bytes 3.2813056e+07
 
 # Traffic Distribution Test
 traffic_test_results:
-  total_requests_sent: #TODO: Enter how many test requests you sent (should be 20)
-  main_responses_received: #TODO: Enter how many responses were from main deployment
-  canary_responses_received: #TODO: Enter how many responses were from canary deployment
-  actual_canary_percentage: #TODO: Calculate the actual percentage of canary traffic
+  total_requests_sent: 20 #TODO: Enter how many test requests you sent (should be 20)
+  main_responses_received: 18 #TODO: Enter how many responses were from main deployment
+  canary_responses_received: 2 #TODO: Enter how many responses were from canary deployment
+  actual_canary_percentage: (100 * 2/20) = 10 #TODO: Calculate the actual percentage of canary traffic
+
+#$ for i in {1..20}; do curl -H "Host: canary-demo.local" localhost:8082; done | grep v2 | wc
+#2
+#can vary from 1 to 20, average was 5
 
 # Prometheus Queries
 prometheus_metrics:
-  main_request_rate: #TODO: Enter the result of rate(http_requests_total{version="v1"}[5m])
-  canary_request_rate: #TODO: Enter the result of rate(http_requests_total{version="v2"}[5m])
+  main_request_rate: 0.15555555555555556 #TODO: Enter the result of rate(http_requests_total{version="v1"}[5m])
+  canary_request_rate: 0.0962962962962963 #TODO: Enter the result of rate(http_requests_total{version="v2"}[5m])
+
+#{container="canary-demo", endpoint="http", instance="10.244.0.14:5000", job="canary-demo", namespace="canary-demo", pod="canary-demo-d655c9c44-k9q82", service="canary-demo", version="v1"}
+#	0.15555555555555556
+#{container="canary-demo", endpoint="http", instance="10.244.0.15:5000", job="canary-demo", namespace="canary-demo", pod="canary-demo-d655c9c44-mv8j2", service="canary-demo", version="v1"}
+#	0.15555555555555556
+#{container="canary-demo", endpoint="http", instance="10.244.0.16:5000", job="canary-demo", namespace="canary-demo", pod="canary-demo-d655c9c44-kwtxg", service="canary-demo", version="v1"}
+#	0.15925925925925927
+#{container="canary-demo", endpoint="http", instance="10.244.0.13:5000", job="canary-demo-canary", namespace="canary-demo", pod="canary-demo-canary-84bcf9cd4d-krxgv", service="canary-demo-canary", version="v2"}
+#	0.0962962962962963
 
 # Rollback Test
 rollback_test:
-  previous_revision: #TODO: Enter the revision number before rollback
-  rollback_command_used: #TODO: Enter the helm rollback command you used
-  time_to_rollback_seconds: #TODO: Enter how long the rollback took to complete
+  previous_revision: 1 #TODO: Enter the revision number before rollback
+  rollback_command_used: helm rollback canary-demo 3 -n canary-demo #TODO: Enter the helm rollback command you used
+  time_to_rollback_seconds: 0m0.295s #TODO: Enter how long the rollback took to complete
+
+#time (helm rollback canary-demo 3 -n canary-demo)
+#Rollback was a success! Happy Helming!
+#
+#real    0m0.295s
+#user    0m0.178s
+#sys     0m0.005s
 
 # Error Budget Calculation (based on 99.9% SLO)
 error_budget:
-  monthly_error_budget_seconds: #TODO: Calculate and enter the monthly error budget in seconds
-  remaining_error_budget_percentage: #TODO: Enter current remaining error budget percentage
+  monthly_error_budget_seconds: 2592.00 #TODO: Calculate and enter the monthly error budget in seconds
+  remaining_error_budget_percentage: 100.00 #TODO: Enter current remaining error budget percentage
+
+#$ python compute_error_budget.py
+#Calculating error budget...
+#Make sure you have port-forwarded Prometheus:
+#kubectl port-forward svc/prometheus-operated 9090:9090 -n canary-demo
+#
+#Fetching data...
+#
+#Results:
+#--------------------------------------------------
+#Monthly Error Budget (seconds): 2592.00
+#Remaining Error Budget (%): 100.00%
+#
+#Detailed Statistics:
+#Total Requests (30d): 200
+#Total Errors (30d): 0
+#
+#For answers.yml:
+#--------------------------------------------------
+#error_budget:
+#  monthly_error_budget_seconds: 2592.00
+#  remaining_error_budget_percentage: 100.00
 
 # Additional Observations
 observations:
   unexpected_behaviors: #TODO: List any unexpected behaviors you observed
+  unexpected_behaviors: servicemonitor was not discovered by Prometheus operator
+  unexpected_behaviors: Grafana was not able load data from Prometheus
+  
   suggested_improvements: #TODO: List any improvements you would suggest
+  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" section of deployment.yaml file
+  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" section of service.yaml file
+  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" and "matchLabels" sections of servicemonitor.yaml file
+  
+    
