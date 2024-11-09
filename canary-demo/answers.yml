@@ -133,8 +133,8 @@ observations:
   unexpected_behaviors: Grafana was not able load data from Prometheus
   
   suggested_improvements: #TODO: List any improvements you would suggest
-  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" section of deployment.yaml file
-  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" section of service.yaml file
+  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" sections of deployment.yaml file
+  suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" sections of service.yaml file
   suggested_improvements: #add "release: prometheus" "key:value" pair in the "labels" and "matchLabels" sections of servicemonitor.yaml file
   
     
