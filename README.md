@@ -18,6 +18,8 @@
 
 
 **Deployment testing visualization in ArgoCD**
-![canary-argo-cd-operator-traffic](https://github.com/user-attachments/assets/8842fc48-5895-4a84-8d18-ddd42d39dabf)
 
-![canary-argo-cd-operator](https://github.com/user-attachments/assets/e2344139-b61a-42dc-9bff-fb04650a8c91)
+![изображение](https://github.com/user-attachments/assets/d63064c1-ab77-4899-a9bb-cea9cfe663cb)
+
+![изображение](https://github.com/user-attachments/assets/8c2f1e53-b665-495b-a888-06a1d299a4ee)
+
