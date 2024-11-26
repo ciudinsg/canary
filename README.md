@@ -15,3 +15,7 @@
 ![изображение](https://github.com/user-attachments/assets/0b3e5c59-f73b-4be3-81d6-1eb0100b673b)
 
 ![изображение](https://github.com/user-attachments/assets/ed9b193b-183d-4507-97c4-f41de1ca1979)
+
+
+**Deployment testing visualization in ArgoCD**
+![canary-argo-cd-operator](https://github.com/user-attachments/assets/e2344139-b61a-42dc-9bff-fb04650a8c91)
