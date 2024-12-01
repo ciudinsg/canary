@@ -12,7 +12,7 @@ service:
 
 ingress:
   enabled: true
-  host: "canary-demo.local"
+  host: "canary-orig.local"
 
 canary:
   enabled: true
