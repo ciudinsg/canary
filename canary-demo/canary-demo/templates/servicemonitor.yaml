@@ -2,14 +2,14 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-main-servicemonitor
+  name: {{ .Release.Name }}-servicemonitor-main
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-main
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Release.Name }}-main
       release: prometheus
   endpoints:
   - port: http
@@ -20,14 +20,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-canary-servicemonitor
+  name: {{ .Release.Name }}-servicemonitor-test
   labels:
-    app: {{ .Release.Name }}-canary
+    app: {{ .Release.Name }}-test
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-canary
+      app: {{ .Release.Name }}-test
       release: prometheus
   endpoints:
   - port: http
