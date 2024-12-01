@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress
+  name: {{ .Release.Name }}-ingress-main
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-main
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"
     nginx.ingress.kubernetes.io/canary-weight: "20"
@@ -17,16 +17,16 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-canary
+                name: {{ .Release.Name }}-main
                 port: 
                   number: {{ .Values.service.port }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-main-ingress
+  name: {{ .Release.Name }}-ingress-test
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-test
 spec:
   rules:
     - host: {{ .Values.ingress.host | quote }}
@@ -36,7 +36,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}
+                name: {{ .Release.Name }}-test
                 port: 
                   number: {{ .Values.service.port }}
 {{- end }}
