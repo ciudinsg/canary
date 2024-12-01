@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-config-main
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-main
 data:
   APP_COLOR: {{ .Values.config.main.appColor }}
   WELCOME_MESSAGE: {{ .Values.config.main.welcomeMessage }}
@@ -12,9 +12,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-config-canary
+  name: {{ .Release.Name }}-config-test
   labels:
-    app: {{ .Release.Name }}-canary
+    app: {{ .Release.Name }}-test
 data:
   APP_COLOR: {{ .Values.config.canary.appColor }}
   WELCOME_MESSAGE: {{ .Values.config.canary.welcomeMessage }}
