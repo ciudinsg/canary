@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-main
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-main
     release: prometheus
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Release.Name }}-main
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Release.Name }}-main
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -25,7 +25,7 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ .Release.Name }}-config-main
+                name: {{ .Release.Name }}-config-orig
           env:
             - name: VERSION
               value: {{ .Values.image.tag }}
@@ -37,19 +37,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-canary
+  name: {{ .Release.Name }}-test
   labels:
-    app: {{ .Release.Name }}-canary
+    app: {{ .Release.Name }}-test
     release: prometheus
 spec:
   replicas: {{ .Values.canary.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-canary
+      app: {{ .Release.Name }}-test
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-canary
+        app: {{ .Release.Name }}-test
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -61,7 +61,7 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ .Release.Name }}-config-canary
+                name: {{ .Release.Name }}-config-test
           env:
             - name: VERSION
               value: {{ .Values.canary.image.tag }}
