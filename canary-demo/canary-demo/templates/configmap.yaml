@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-config-main
+  name: {{ .Release.Name }}-config-orig
   labels:
     app: {{ .Release.Name }}-main
 data:
